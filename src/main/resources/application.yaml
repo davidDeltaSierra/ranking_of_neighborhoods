@@ -1,0 +1,56 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  application:
+    name: ranking_of_neighborhoods
+  profiles:
+    active: dev
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /public/actuator
+  health:
+    redis:
+      enabled: false
+
+springdoc:
+  swagger-ui:
+    config-url: ${springdoc.api-docs.path}/swagger-config
+    urls:
+      - url: ${springdoc.api-docs.path}
+        name: root
+    path: /public/swagger-ui
+  api-docs:
+    path: /public/api-docs
+
+event:
+  exchanges:
+    - name: occurrence.topic
+      routers:
+        - occurrence.save
+        - processing.occurrence.save.dlx
+
+  queues:
+    - name: processing-occurrence-save
+      lazy: false
+      dlx-exchange: ${event.exchanges[0].name}
+      dlrk: ${event.exchanges[0].routers[1]}
+
+    - name: processing-occurrence-save-dlx
+      lazy: true
+
+  bindings:
+    - exchange: ${event.exchanges[0].name}
+      queue: ${event.queues[0].name}
+      router: ${event.exchanges[0].routers[0]}
+
+    - exchange: ${event.exchanges[0].name}
+      queue: ${event.queues[1].name}
+      router: ${event.exchanges[0].routers[1]}
