@@ -2,20 +2,16 @@ package br.com.ranking_of_neighborhoods.occurrence;
 
 import br.com.ranking_of_neighborhoods.category.Category;
 import br.com.ranking_of_neighborhoods.client.Client;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
 @Table(name = "occurrence")
 public class Occurrence {
     @Id
@@ -32,8 +28,8 @@ public class Occurrence {
     private LocalDateTime registrationDate = LocalDateTime.now();
     private Long idOwner;
     private Long idCategory;
-    @Transient
+    @ReadOnlyProperty
     private Category category;
-    @Transient
+    @ReadOnlyProperty
     private Client owner;
 }

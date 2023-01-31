@@ -5,15 +5,25 @@ import br.com.ranking_of_neighborhoods.category.CategoryService;
 import br.com.ranking_of_neighborhoods.client.Client;
 import br.com.ranking_of_neighborhoods.client.ClientService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OccurrenceService {
     private final OccurrenceRepository occurrenceRepository;
     private final CategoryService categoryService;
     private final ClientService clientService;
+
+    public Mono<Occurrence> findById(Long id) {
+        return occurrenceRepository.findFullById(id)
+                .map(OccurrenceFullQueryResult::getOccurrence)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Occurrence not found")));
+    }
 
     public Mono<Occurrence> save(OccurrenceRequest occurrenceRequest) {
         return Mono.zip(
@@ -32,7 +42,7 @@ public class OccurrenceService {
                                          Category category,
                                          Client client) {
         return Occurrence.builder()
-                .category(category)
+                //.category(category)
                 .idCategory(category.getId())
                 .owner(client)
                 .idOwner(category.getId())

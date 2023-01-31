@@ -1,17 +1,12 @@
 package br.com.ranking_of_neighborhoods.category;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
 @Table(name = "category")
 public class Category {
     @Id

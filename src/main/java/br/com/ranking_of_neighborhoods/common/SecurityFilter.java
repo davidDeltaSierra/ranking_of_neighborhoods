@@ -14,9 +14,10 @@ import reactor.core.publisher.Mono;
 public class SecurityFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        return getToken(exchange)
-                //.doOnNext(this::auth)
-                .flatMap(unused -> chain.filter(exchange));
+        return chain.filter(exchange);
+        /*return getToken(exchange)
+                .doOnNext(this::auth)
+                .flatMap(unused -> chain.filter(exchange));*/
     }
 
     private Mono<String> getToken(ServerWebExchange exchange) {

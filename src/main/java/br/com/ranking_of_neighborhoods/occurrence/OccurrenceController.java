@@ -6,10 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -18,6 +15,13 @@ import reactor.core.publisher.Mono;
 @Timed("http_server_requests")
 class OccurrenceController {
     private final OccurrenceService occurrenceService;
+
+    @Operation(summary = "Find occurrence by id")
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Mono<Occurrence>> findById(@PathVariable Long id) {
+        return ResponseEntity.ok()
+                .body(occurrenceService.findById(id));
+    }
 
     @Operation(summary = "Save new occurrence")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
