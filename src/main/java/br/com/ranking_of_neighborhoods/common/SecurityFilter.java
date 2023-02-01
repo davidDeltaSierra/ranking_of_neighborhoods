@@ -1,6 +1,5 @@
 package br.com.ranking_of_neighborhoods.common;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,7 +12,6 @@ import reactor.core.publisher.Mono;
 
 import static org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository.DEFAULT_SPRING_SECURITY_CONTEXT_ATTR_NAME;
 
-@Slf4j
 public class SecurityFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -24,7 +22,6 @@ public class SecurityFilter implements WebFilter {
     }
 
     private void setAuthentication(SecurityContext securityContext, String token) {
-        log.info("test: {}", token);
         securityContext.setAuthentication(
                 new UsernamePasswordAuthenticationToken(token, null, null)
         );
