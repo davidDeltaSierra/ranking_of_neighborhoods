@@ -16,8 +16,13 @@ public class SecurityFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         return getToken(exchange)
-                .flatMap(token -> Mono.zip(getSecurityContext(exchange.getSession()), Mono.just(token)))
-                .doOnNext(zip -> setAuthentication(zip.getT1(), zip.getT2()))
+                .flatMap(token ->
+                        getSecurityContext(exchange.getSession())
+                                .map(securityContext -> {
+                                    setAuthentication(securityContext, token);
+                                    return securityContext;
+                                })
+                )
                 .then(chain.filter(exchange));
     }
 
